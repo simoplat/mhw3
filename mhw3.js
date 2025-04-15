@@ -145,8 +145,32 @@ nascontiContenuti('channel');
 function onJson(json){
     console.log('JSON ricevuto');
     // Svuotiamo la libreria
-    const library = document.querySelector('.video-layout');
-    library.innerHTML = '';
+    const content = document.querySelector('.video-layout');
+    content.innerHTML = '';
+    if(json.amiibo.length === 0) {
+        let noResult = document.createElement('h1');
+        noResult.textContent = 'Nessun risultato trovato';
+        content.appendChild(noResult);
+    }
+    for (let i = 0; i < json.amiibo.length; i++) {
+        console.log(json.amiibo[i].character);
+        let imgChar = json.amiibo[i].image;
+        let imgElement = document.createElement('img');
+        imgElement.src = imgChar;
+        let divThumbnail = document.createElement('div');
+        divThumbnail.classList.add('video-thumbnail');
+        let divVideoContent = document.createElement('div');
+        divVideoContent.classList.add('video-content');
+        divThumbnail.appendChild(imgElement);
+        content.appendChild(divVideoContent);
+        let divText = document.createElement('div');
+        divText.classList.add('video-info');
+        let h1 = document.createElement('h1');
+        h1.textContent = json.amiibo[i].character;
+        divText.appendChild(h1);
+        divVideoContent.appendChild(divThumbnail);
+        divVideoContent.appendChild(divText);
+    }
 }
 
 function onResponse(response) {
@@ -162,7 +186,7 @@ const searchInput = document.querySelector('#search-bar').value;
 console.log('Hai cercato: '+ searchInput);
 const encode = encodeURIComponent(searchInput);
 console.log('Encoding:' + encode);
-restUrl = 'https://' + encode;
+restUrl = 'https://www.amiiboapi.com/api/amiibo/?name=' + encode;
 fetch(restUrl).then(onResponse).then(onJson);
 
 }
