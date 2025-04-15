@@ -18,7 +18,12 @@ body {
   min-height: 100vh;
 }
 
+#search-form {
+  display: flex;
+  justify-content: center;
+  width: 100%;
 
+}
 
 header {
   position: fixed;
@@ -247,7 +252,10 @@ header {
     display: none;
   }
 
-
+  #search-form {
+    display: flex;
+    justify-content: flex-end;
+  }
 
   .central-layout {
     left: 0 !important;

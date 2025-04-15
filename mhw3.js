@@ -136,3 +136,41 @@ function nascontiContenuti(dataType) {
 // Example usage:
 nascontiContenuti('Tu');
 nascontiContenuti('channel');
+
+
+//API 
+
+
+
+function onJson(json){
+    console.log('JSON ricevuto');
+    // Svuotiamo la libreria
+    const library = document.querySelector('.video-layout');
+    library.innerHTML = '';
+}
+
+function onResponse(response) {
+    console.log('Risposta ricevuta');
+    return response.json();
+  }
+
+
+
+function search (event){
+event.preventDefault();
+const searchInput = document.querySelector('#search-bar').value;
+console.log('Hai cercato: '+ searchInput);
+const encode = encodeURIComponent(searchInput);
+console.log('Encoding:' + encode);
+restUrl = 'https://' + encode;
+fetch(restUrl).then(onResponse).then(onJson);
+
+}
+
+
+
+
+
+
+const form = document.querySelector('#search-form');
+form.addEventListener('submit', search);
