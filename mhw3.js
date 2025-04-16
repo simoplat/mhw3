@@ -142,21 +142,33 @@ nascontiContenuti('channel');
 
 
 
+const API_KEY = 'secret'; 
+const maxResults = 10;
+
+
 function onJson(json){
     console.log('JSON ricevuto');
     // Svuotiamo la libreria
     const content = document.querySelector('.video-layout');
     content.innerHTML = '';
-    if(json.amiibo.length === 0) {
+    if(json.items.length === 0) {
         let noResult = document.createElement('h1');
         noResult.textContent = 'Nessun risultato trovato';
         content.appendChild(noResult);
     }
-    for (let i = 0; i < json.amiibo.length; i++) {
-        console.log(json.amiibo[i].character);
-        let imgChar = json.amiibo[i].image;
+    for (let i = 0; i < json.items.length; i++) {
+        
+        let item = json.items[i];
+
+
+
+        //creo l'immagine e setto la sorgente
+        let imgSource = item.snippet.thumbnails.medium.url;
         let imgElement = document.createElement('img');
-        imgElement.src = imgChar;
+        imgElement.src = imgSource;
+
+
+
         let divThumbnail = document.createElement('div');
         divThumbnail.classList.add('video-thumbnail');
         let divVideoContent = document.createElement('div');
@@ -166,8 +178,12 @@ function onJson(json){
         let divText = document.createElement('div');
         divText.classList.add('video-info');
         let h1 = document.createElement('h1');
-        h1.textContent = json.amiibo[i].character;
-        divText.appendChild(h1);
+
+        //imposto il titolo
+        h1.textContent =item.snippet.title; ;
+        divText.appendChild(h1); 
+
+        //appendo il titolo e la thumbnail a video-content
         divVideoContent.appendChild(divThumbnail);
         divVideoContent.appendChild(divText);
     }
@@ -176,7 +192,7 @@ function onJson(json){
 function onResponse(response) {
     console.log('Risposta ricevuta');
     return response.json();
-  }
+}
 
 
 
@@ -186,7 +202,8 @@ const searchInput = document.querySelector('#search-bar').value;
 console.log('Hai cercato: '+ searchInput);
 const encode = encodeURIComponent(searchInput);
 console.log('Encoding:' + encode);
-restUrl = 'https://www.amiiboapi.com/api/amiibo/?name=' + encode;
+restUrl = 'https://www.googleapis.com/youtube/v3/search?part=snippet&q=' + encode + '&type=video&maxResults=' + maxResults+ '&key=' + API_KEY;
+console.log('URL:' + restUrl);
 fetch(restUrl).then(onResponse).then(onJson);
 
 }
@@ -198,3 +215,5 @@ fetch(restUrl).then(onResponse).then(onJson);
 
 const form = document.querySelector('#search-form');
 form.addEventListener('submit', search);
+
+
