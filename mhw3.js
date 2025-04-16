@@ -149,12 +149,12 @@ const maxResults = 10;
 function onJson(json){
     console.log('JSON ricevuto');
     // Svuotiamo la libreria
-    const content = document.querySelector('.video-layout');
-    content.innerHTML = '';
+    const contentVIDEOLAYOUT = document.querySelector('.video-layout');
+    contentVIDEOLAYOUT.innerHTML = '';
     if(json.items.length === 0) {
         let noResult = document.createElement('h1');
         noResult.textContent = 'Nessun risultato trovato';
-        content.appendChild(noResult);
+        contentVIDEOLAYOUT.appendChild(noResult);
     }
     for (let i = 0; i < json.items.length; i++) {
         
@@ -168,13 +168,15 @@ function onJson(json){
         imgElement.src = imgSource;
 
 
+        let divVideoContent = document.createElement('div');
+        divVideoContent.classList.add('video-content');
 
         let divThumbnail = document.createElement('div');
         divThumbnail.classList.add('video-thumbnail');
-        let divVideoContent = document.createElement('div');
-        divVideoContent.classList.add('video-content');
         divThumbnail.appendChild(imgElement);
-        content.appendChild(divVideoContent);
+
+        contentVIDEOLAYOUT.appendChild(divVideoContent);
+
         let divText = document.createElement('div');
         divText.classList.add('video-info');
         let h1 = document.createElement('h1');

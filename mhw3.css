@@ -416,16 +416,33 @@ header {
   height: 80px;
 }
 
-.video-info h1{
+.video-info h1 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
   overflow: hidden;
   text-overflow: ellipsis;
-  max-height: 3.6em; 
   line-height: 1.2em;
-  font-size: 16px; 
-  height: auto;
+  max-height: 2.4em; 
+  font-size: 1.2em;
   padding: 1px;
-  font-size: 20px;
 }
+
+.video-info p {
+  font-size: small;
+  font-weight: bold;
+  color: rgb(126, 126, 126);
+
+}
+
+.video-info-channel{
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+  gap: 10px;
+}
+
 
 .video-info img {
   width: 50px;
