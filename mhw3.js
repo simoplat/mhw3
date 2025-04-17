@@ -138,7 +138,7 @@ nascontiContenuti('Tu');
 nascontiContenuti('channel');
 
 
-//API 
+//API N1
 
 
 
@@ -185,7 +185,7 @@ function onJson(json){
 
         
         let h1 = document.createElement('h1');
-        h1.textContent =item.snippet.title; ;
+        h1.textContent =item.snippet.title; 
 
         let p = document.createElement('p');
         p.textContent = item.snippet.channelTitle;
@@ -203,6 +203,8 @@ function onJson(json){
     }
 }
 
+
+
 function onResponse(response) {
     console.log('Risposta ricevuta');
     return response.json();
@@ -211,23 +213,95 @@ function onResponse(response) {
 
 
 function search (event){
-event.preventDefault();
-const searchInput = document.querySelector('#search-bar').value;
-console.log('Hai cercato: '+ searchInput);
-const encode = encodeURIComponent(searchInput);
-console.log('Encoding:' + encode);
-restUrl = 'https://www.googleapis.com/youtube/v3/search?part=snippet&q=' + encode + '&type=video&maxResults=' + maxResults+ '&key=' + API_KEY;
-console.log('URL:' + restUrl);
-fetch(restUrl).then(onResponse).then(onJson);
+    event.preventDefault();
+    const searchInput = document.querySelector('#search-bar').value;
+    console.log('Hai cercato: '+ searchInput);
+    const encode = encodeURIComponent(searchInput);
+    console.log('Encoding:' + encode);
+    restUrl = 'https://www.googleapis.com/youtube/v3/search?part=snippet&q=' + encode + '&type=video&maxResults=' + maxResults+ '&key=' + API_KEY;
+    console.log('URL:' + restUrl);
+    fetch(restUrl).then(onResponse).then(onJson);
+    
+}
+const form = document.querySelector('#search-form');
+form.addEventListener('submit', search);
 
+////API SPOTIFY N.2 oauth 2.0
+
+
+function onJsonSpotify(json){
+    console.log('JSON ricevuto');
+    let namePlaylist;
+    let sidebarContent = document.querySelector('.left-sidebar');
+    let videoLayout = document.querySelector('.video-layout');
+    let h1 = document.createElement('h1');
+    h1.textContent = "Le tue playlist sono: "; 
+    let item = document.createElement('h2');
+    for (let i = 0; i < json.items.length; i++) {
+        console.log('Nome playlist: ' + namePlaylist);
+        namePlaylist = json.items[i].name;
+        const contentVIDEOLAYOUT = document.querySelector('.video-layout');
+        const categorie = document.querySelector('.nav-central');
+        categorie.classList.add('hidden');
+        contentVIDEOLAYOUT.innerHTML = '';
+        videoLayout.appendChild(h1);
+        item.textContent = namePlaylist;
+        videoLayout.appendChild(item); 
+        videoLayout.classList.add('column')
+        let imgSource = json.items[i].images.url;
+            let imgElement = document.createElement('img');
+            imgElement.src = imgSource;
+            videoLayout.appendChild(imgElement);
+    }
 }
 
 
 
+function playlistSpotify(event)
+{
+  // Impedisci il submit del form
+  event.preventDefault();
+  console.log('Ho ricevuto il click sul bottone playlist');
+  // Esegui la richiesta
+  fetch("https://api.spotify.com/v1/users/" + myUserId + "/playlists?limit=" + maxResults,
+    {
+      headers:
+      {
+        'Authorization': 'Bearer ' + token
+      }
+    }
+  ).then(onResponse).then(onJsonSpotify);
+}
 
 
+function onTokenJson(json)
+{
+  token = json.access_token;
+}
 
-const form = document.querySelector('#search-form');
-form.addEventListener('submit', search);
+function onTokenResponse(response)
+{
+  return response.json();
+}
 
 
+const client_id = 'secret';
+const client_secret = 'secret';
+const myUserId = 'secret';
+let token;
+
+fetch("https://accounts.spotify.com/api/token",
+	{
+   method: "post",
+   body: 'grant_type=client_credentials',
+   headers:
+   {
+    'Content-Type': 'application/x-www-form-urlencoded',
+    'Authorization': 'Basic ' + btoa(client_id + ':' + client_secret)
+   }
+  }
+).then(onTokenResponse).then(onTokenJson);
+
+
+const playlistButton = document.querySelector('#buttonPlaylist');
+playlistButton.addEventListener('click', playlistSpotify);
