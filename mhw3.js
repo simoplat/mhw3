@@ -143,7 +143,7 @@ nascontiContenuti('channel');
 
 
 const API_KEY = 'secret'; 
-const maxResults = 10;
+const maxResults = 20;
 
 
 function onJson(json){
@@ -173,21 +173,31 @@ function onJson(json){
 
         let divThumbnail = document.createElement('div');
         divThumbnail.classList.add('video-thumbnail');
-        divThumbnail.appendChild(imgElement);
-
-        contentVIDEOLAYOUT.appendChild(divVideoContent);
-
+        
         let divText = document.createElement('div');
         divText.classList.add('video-info');
+
+
+        let divVideoInfoChannel = document.createElement('div');
+        divVideoInfoChannel.classList.add('video-info-channel');
+
+        
         let h1 = document.createElement('h1');
-
-        //imposto il titolo
         h1.textContent =item.snippet.title; ;
-        divText.appendChild(h1); 
 
-        //appendo il titolo e la thumbnail a video-content
+        let p = document.createElement('p');
+        p.textContent = item.snippet.channelTitle;
+        
+
+        divVideoInfoChannel.appendChild(h1);
+        divVideoInfoChannel.appendChild(p);
+
+        divText.appendChild(divVideoInfoChannel);
+        divThumbnail.appendChild(imgElement);
         divVideoContent.appendChild(divThumbnail);
         divVideoContent.appendChild(divText);
+
+        contentVIDEOLAYOUT.appendChild(divVideoContent);
     }
 }
 
