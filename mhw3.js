@@ -143,13 +143,15 @@ nascontiContenuti('channel');
 
 
 const API_KEY = 'secret'; 
-const maxResults = 20;
+const maxResults = 30;
 
 
 function onJson(json){
     console.log('JSON ricevuto');
     // Svuotiamo la libreria
     const contentVIDEOLAYOUT = document.querySelector('.video-layout');
+    const categorie = document.querySelector('.nav-central');
+    categorie.classList.add('hidden');
     contentVIDEOLAYOUT.innerHTML = '';
     if(json.items.length === 0) {
         let noResult = document.createElement('h1');
