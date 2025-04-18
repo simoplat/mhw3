@@ -150,9 +150,14 @@ function onJson(json){
     console.log('JSON ricevuto');
     // Svuotiamo la libreria
     const contentVIDEOLAYOUT = document.querySelector('.video-layout');
-    const categorie = document.querySelector('.nav-central');
-    categorie.classList.add('hidden');
+    const navCentral = document.querySelector('.nav-central');
+    navCentral.classList.add('hidden');
     contentVIDEOLAYOUT.innerHTML = '';
+    const categorie = document.querySelector('.categorie');
+    while (categorie.querySelector('h1')) {
+        categorie.querySelector('h1').remove();
+    }
+
     if(json.items.length === 0) {
         let noResult = document.createElement('h1');
         noResult.textContent = 'Nessun risultato trovato';
@@ -239,9 +244,12 @@ function onJsonSpotify(json){
     const navCentral = document.querySelector('.nav-central');
     navCentral.classList.add('hidden');
     const categorie = document.querySelector('.categorie');
-    let title = document.createElement('h1');
-    title.textContent = 'Playlists:';
-    categorie.appendChild(title);
+    if(!categorie.querySelector('h1')) {
+
+        let title = document.createElement('h1');
+        title.textContent = 'Playlists:';
+        categorie.appendChild(title);
+    }
     for (let i = 0; i < json.playlists.items.length; i++) {
         const item = json.playlists.items[i];
         if (item && item.name) {
@@ -254,9 +262,12 @@ function onJsonSpotify(json){
             imgElement.src = item.images[0].url;
             let divThumbnail = document.createElement('div');
             divThumbnail.classList.add('video-thumbnail');
+            let divVideoInfo = document.createElement('div');
+            divVideoInfo.classList.add('video-info');
+            divVideoInfo.appendChild(playlistName);
             divThumbnail.appendChild(imgElement);
-            videoContent.appendChild(playlistName);
             videoContent.appendChild(divThumbnail);
+            videoContent.appendChild(divVideoInfo);
 
             contentVIDEOLAYOUT.appendChild(videoContent);
         }
