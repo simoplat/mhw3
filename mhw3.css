@@ -858,3 +858,8 @@ footer:hover {
   align-items: center;
   flex-direction: column;
 }
+
+.categorie h1{
+  width: auto;
+  text-align: center;
+}

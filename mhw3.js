@@ -200,6 +200,9 @@ function onJson(json){
         divVideoContent.appendChild(divText);
 
         contentVIDEOLAYOUT.appendChild(divVideoContent);
+        if(contentVIDEOLAYOUT.classList.contains('column')) {
+            contentVIDEOLAYOUT.classList.remove('column');
+        }
     }
 }
 
@@ -230,40 +233,45 @@ form.addEventListener('submit', search);
 
 
 function onJsonSpotify(json){
-    console.log('JSON ricevuto');
-    let namePlaylist;
-    let sidebarContent = document.querySelector('.left-sidebar');
-    let videoLayout = document.querySelector('.video-layout');
-    let h1 = document.createElement('h1');
-    h1.textContent = "Le tue playlist sono: "; 
-    let item = document.createElement('h2');
-    for (let i = 0; i < json.items.length; i++) {
-        console.log('Nome playlist: ' + namePlaylist);
-        namePlaylist = json.items[i].name;
-        const contentVIDEOLAYOUT = document.querySelector('.video-layout');
-        const categorie = document.querySelector('.nav-central');
-        categorie.classList.add('hidden');
-        contentVIDEOLAYOUT.innerHTML = '';
-        videoLayout.appendChild(h1);
-        item.textContent = namePlaylist;
-        videoLayout.appendChild(item); 
-        videoLayout.classList.add('column')
-        let imgSource = json.items[i].images.url;
+    const contentVIDEOLAYOUT = document.querySelector('.video-layout');
+    contentVIDEOLAYOUT.innerHTML = '';
+    const centralLayout = document.querySelector('.central-layout');
+    const navCentral = document.querySelector('.nav-central');
+    navCentral.classList.add('hidden');
+    const categorie = document.querySelector('.categorie');
+    let title = document.createElement('h1');
+    title.textContent = 'Playlists:';
+    categorie.appendChild(title);
+    for (let i = 0; i < json.playlists.items.length; i++) {
+        const item = json.playlists.items[i];
+        if (item && item.name) {
+            console.log(item.name);
+            let playlistName = document.createElement('h2');
+            playlistName.textContent = item.name;
+            let videoContent = document.createElement('div');
+            videoContent.classList.add('video-content');
             let imgElement = document.createElement('img');
-            imgElement.src = imgSource;
-            videoLayout.appendChild(imgElement);
+            imgElement.src = item.images[0].url;
+            let divThumbnail = document.createElement('div');
+            divThumbnail.classList.add('video-thumbnail');
+            divThumbnail.appendChild(imgElement);
+            videoContent.appendChild(playlistName);
+            videoContent.appendChild(divThumbnail);
+
+            contentVIDEOLAYOUT.appendChild(videoContent);
+        }
     }
+    
 }
 
 
 
 function playlistSpotify(event)
 {
-  // Impedisci il submit del form
   event.preventDefault();
   console.log('Ho ricevuto il click sul bottone playlist');
   // Esegui la richiesta
-  fetch("https://api.spotify.com/v1/users/" + myUserId + "/playlists?limit=" + maxResults,
+  fetch("https://api.spotify.com/v1/search?q=ROCK&type=playlist",
     {
       headers:
       {
